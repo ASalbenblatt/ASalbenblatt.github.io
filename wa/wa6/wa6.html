@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design System Template</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Reset and Base Styles */
+        :root {
+            /* Color Palette - 5 Core Colors */
+            --color-primary: #813CAA;     /* Main Brand Color */
+            --color-secondary: #563A7E;   /* Complementary Action Color */
+            --color-accent: #412745;      /* Highlight / Warning Color */
+            --color-neutral: #152851;     /* Neutral Text and Background */
+            
+            /* Derived Colors for Flexibility */
+            --color-background: color-mix(in srgb, var(--color-accent) 10%, white);
+            --color-text-dark: var(--color-neutral);
+            --color-text-light: white;
+
+            /* Typography */
+            --font-primary: 'Palatino PostScript', serif;
+            --font-headings: 'Raleway', sans-serif;
+
+            /* Spacing System */
+            --spacing-xs: 8px;
+            --spacing-sm: 16px;
+            --spacing-md: 24px;
+            --spacing-lg: 32px;
+            --spacing-xl: 40px;
+
+            /* Border Radius */
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            line-height: 1.6;
+            background-color: var(--color-background);
+            color: var(--color-text-dark);
+            padding: var(--spacing-xl);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Typography Styles */
+        h1 {
+            font-family: var(--font-headings);
+            font-size: 3.50rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-lg);
+            margin-top: var(--spacing-md);
+            color: var(--color-primary);
+        }
+
+        h2 {
+            font-family: var(--font-headings);
+            font-size: 2.25rem;
+            font-weight: 600;
+            margin-top: var(--spacing-sm);
+            margin-bottom: var(--spacing-md);
+            color: var(--color-secondary);
+        }
+
+        h3 {
+            font-family: var(--font-headings);
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin-top: var(--spacing-xsm);
+            margin-bottom: var(--spacing-sm);
+            color: var(--color-accent);
+        }
+
+        .body-text {
+            font-size: 1rem;
+            margin-bottom: var(--spacing-xsm);
+        }
+
+        .small-text {
+            font-size: 0.75rem;
+            color: color-mix(in srgb, var(--color-text-dark) 70%, transparent);
+        }
+
+        /* Color Palette Section */
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .color-swatch {
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        /* Component Styles */
+        .button {
+            display: inline-block;
+            padding: var(--spacing-sm) var(--spacing-md);
+            background-color: var(--color-primary);
+            color: var(--color-text-light);
+            text-decoration: none;
+            border-radius: var(--radius-sm);
+            transition: background-color 0.3s ease, transform 0.2s;
+            border: 4px solid transparent;
+        }
+
+        .button:hover {
+            background-color: var(--color-secondary);
+            border-color: var(--color-accent);
+        }
+
+        .button:active {
+            transform: scale(0.95);
+            background-color: var(--color-secondary);
+            border: 2px solid var(--color-accent);
+        }
+
+        .button:focus {
+            border: 4px solid var(--color-accent);
+            outline:0;
+        }
+
+        .link {
+            color: var(--color-primary);
+            text-decoration: none;
+            transition: color 0.3s ease, text-decoration-color 0.3s;
+            font-weight: 600;
+        }
+
+        .link:hover {
+            text-decoration: underline;
+            text-decoration-color: var(--color-secondary);
+        }
+
+        .link:visited {
+            color: var(--color-accent);
+        }
+
+        /* Spacing Demonstration */
+        .spacing-demo {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .spacing-block {
+            background-color: var(--color-primary);
+            height: 50px;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>Design System Template</h1>
+
+        <section>
+            <h2>Color Palette</h2>
+            <div class="color-palette">
+                <div class="color-swatch" style="background-color: var(--color-primary); color: var(--color-text-light);">
+                    <strong>Primary Color</strong>
+                    <p>#813CAA</p>
+                    <small>Contrast Ratio: 6.6:1</small>
+                </div>
+                <div class="color-swatch" style="background-color: var(--color-secondary); color: var(--color-text-light);">
+                    <strong>Secondary Color</strong>
+                    <p>#563A7E</p>
+                    <small>Contrast Ratio: 9.1:1</small>
+                </div>
+                <div class="color-swatch" style="background-color: var(--color-accent); color: var(--color-text-light);">
+                    <strong>Accent Color</strong>
+                    <p>#412745</p>
+                    <small>Contrast Ratio: 13.1:1</small>
+                </div>
+                <div class="color-swatch" style="background-color: var(--color-neutral); color: var(--color-text-light);">
+                    <strong>Neutral Color</strong>
+                    <p>#152851</p>
+                    <small>Contrast Ratio: 14.4:1</small>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Typography</h2>
+            <h1>Heading 1 - Raleway</h1>
+            <h2>Heading 2 - Raleway</h2>
+            <h3>Heading 3 - Raleway</h3>
+            <p class="body-text">Body Text - Using Palatino PostScript with a comfortable line height and readable size.</p>
+            <p class="small-text">Small Text - Subtle and understated, perfect for annotations and footnotes.</p>
+        </section>
+
+        <section>
+            <h2>Spacing System</h2>
+            <div class="spacing-demo">
+                <div class="spacing-block" style="width: var(--spacing-xs)"></div>
+                <div class="spacing-block" style="width: var(--spacing-sm)"></div>
+                <div class="spacing-block" style="width: var(--spacing-md)"></div>
+                <div class="spacing-block" style="width: var(--spacing-lg)"></div>
+                <div class="spacing-block" style="width: var(--spacing-xl)"></div>
+            </div>
+            <p>Spacing blocks demonstrating size variations from xs to xl</p>
+        </section>
+
+        <section>
+            <h2>Interactive Components</h2>
+            <a href="#" class="button">Primary Button</a>
+            <a href="../wa1.html" class="link">Standard Link</a>
+            <a href="#" class="link">Visited Link</a>
+        </section>
+    </div>
+</body>
+</html>
