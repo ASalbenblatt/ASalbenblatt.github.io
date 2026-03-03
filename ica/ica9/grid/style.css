@@ -1,0 +1,123 @@
+body {
+  font: 1.2em / 1.5 sans-serif;
+}
+
+.gridOne > * {
+  background-color: #4d7298;
+  border: 2px solid #77a6b6;
+  border-radius: 0.5em;
+  color: white;
+  padding: 0.5em;
+}
+
+.gridTwo > * {
+  border-radius: 0.5em;
+  color: white;
+  padding: 0.5em;
+}
+
+.item1 {
+  background-color: rgb(74 102 112 / 70%);
+  border: 5px solid rgb(74 102 112 / 100%);
+}
+
+.item2 {
+  background-color: rgb(214 162 173 / 70%);
+  border: 5px solid rgb(214 162 173 / 100%);
+}
+
+.gridTwo {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 100px 100px 100px;
+  gap: 10px;
+}
+
+.gridThree > * {
+  background-color: #4d7298;
+  border: 2px solid #77a6b6;
+  border-radius: 0.5em;
+  color: white;
+  padding: 0.5em;
+}
+
+.gridThree {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 10px;
+}
+
+.card {
+  display: grid;
+  grid-template-rows: 200px min-content;
+}
+
+.card > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tags {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tags > * {
+  background-color: #999999;
+  color: white;
+  padding: 0.2em 0.8em;
+  border-radius: 0.2em;
+  font-size: 80%;
+  margin: 5px;
+}
+
+/*------------------------------------  My Code  ------------------------------------*/
+
+.gridOne {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+}
+
+.item1 {
+    grid-row: 1/3;
+    grid-column: 1/4;
+    z-index: 2;
+}
+
+.item2 {
+    grid-row: 2/4;
+    grid-column: 2/5;
+    z-index: 1;
+}
+
+.gridThree {
+    grid-template-areas: "one one one" "two three three" ". four four";
+}
+
+.one {
+    grid-area: one;
+}
+.two {
+    grid-area: two;
+}
+.three {
+    grid-area: three;
+}
+.four {
+    grid-area: four;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
