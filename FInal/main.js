@@ -6,44 +6,56 @@ const enemyList = []
 const thingRadius = 20
 const colideMult = 0.3;
 const enemySpeed = 1;
-const width = 1000
-const height = 1000
+const gameWidth = 500
+const gameHeight = 500
 const enemyStartGap = 50
-const lastFrame = 0
+let lastFrame = 0
 
 const wallColor = [50, 50, 50]
+const backgroundColor = [0, 0, 10]
+const testColor = [0, 255, 0]
 
-let position = [width/2, height/2]
+let position = [gameWidth/2, gameHeight/2]
 let velocity = [0,0]
 
 
 
 window.addEventListener("DOMContentLoaded", function() {
-    const canvas = document.querySelector("canvas");
-    const ctx = canvas.getContext("2d");
     for (let volume = 0 ; volume <= 100 ; volume += deltaVolume) {
       if (volume % (deltaVolume*4) == 0) {
-        enemyList.push(new enemies(getRandom(0, position[0]-(enemyStartGap+thingRadius)), getRandom(0, height), volume))
+        enemyList.push(new enemies(getRandom(0, position[0]-(enemyStartGap+thingRadius)), getRandom(0, gameHeight), volume))
       } else if (volume % (deltaVolume*4) == 1*deltaVolume) {
-        enemyList.push(new enemies(getRandom(position[0]+(enemyStartGap+thingRadius), width), getRandom(0, height), volume))
+        enemyList.push(new enemies(getRandom(position[0]+(enemyStartGap+thingRadius), gameWidth), getRandom(0, gameHeight), volume))
       } else if (volume % (deltaVolume*4) == 2*deltaVolume) {
-        enemyList.push(new enemies(getRandom(0, width), getRandom(0, position[1]-(enemyStartGap+thingRadius)), volume))
+        enemyList.push(new enemies(getRandom(0, gameWidth), getRandom(0, position[1]-(enemyStartGap+thingRadius)), volume))
       } else {
-        enemyList.push(new enemies(getRandom(0, width), getRandom(position[1]+(enemyStartGap+thingRadius), height), volume))
+        enemyList.push(new enemies(getRandom(0, gameWidth), getRandom(position[1]+(enemyStartGap+thingRadius), gameHeight), volume))
       }
     }
     lastFrame = Date.now()
-    requestAnimationFrame(loop(), ctx, canvas)
+    window.requestAnimationFrame(loop)
 })
 
-function loop (ctx, canvas) {
+function loop () {
+  const canvas = document.querySelector("canvas");
+  const ctx = canvas.getContext("2d");
+
+  canvas.width = window.screen.availWidth
+  canvas.height = window.screen.availHeight
+
   const frameDelta = (Date.now() - lastFrame)*60/1000
   lastFrame = Date.now()
 
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.translate(-1*(position[0]-(canvas.width/2)), -1*(position[1]-(canvas.height/2)))
 
-
+  ctx.fillStyle = `rgb(${backgroundColor[0]} ${backgroundColor[1]} ${backgroundColor[2]})`;
+  ctx.fillRect(-10, -10, gameWidth+20, gameHeight+20);
+  ctx.fillStyle = `rgb(${wallColor[0]} ${wallColor[1]} ${wallColor[2]})`;
+  ctx.fillRect(-1 * canvas.width, -1 * canvas.height, gameWidth + canvas.width*2, canvas.height);
+  ctx.fillRect(-1 * canvas.width, -1 * canvas.height, canvas.width, gameHeight + canvas.height*2);
+  ctx.fillRect(gameWidth, -1 * canvas.height, canvas.width, gameHeight + canvas.height*2);
+  ctx.fillRect(-1 * canvas.width, gameHeight, gameWidth + canvas.width*2, canvas.height);
 
   for (enemy of enemyList) {
     enemy.desire(frameDelta);
@@ -53,7 +65,8 @@ function loop (ctx, canvas) {
     enemy.move(frameDelta);
     enemy.create(ctx);
   }
-  requestAnimationFrame(loop(), ctx, canvas)
+
+  window.requestAnimationFrame(loop)
 }
 
 class enemies {
@@ -92,16 +105,16 @@ class enemies {
 
     if (
       this.coord[0] < thingRadius ||
-      this.coord[0] > width - thingRadius ||
+      this.coord[0] > gameWidth - thingRadius ||
       this.coord[1] < thingRadius ||
-      this.coord[1] > height - thingRadius
+      this.coord[1] > gameHeight - thingRadius
     ) {
       this.wanderAng += Math.PI;
     }
 
     this.coord = [
-      constrain(this.coord[0], thingRadius, width - thingRadius),
-      constrain(this.coord[1], thingRadius, height - thingRadius),
+      constrain(this.coord[0], thingRadius, gameWidth - thingRadius),
+      constrain(this.coord[1], thingRadius, gameHeight - thingRadius),
     ];
   }
 
