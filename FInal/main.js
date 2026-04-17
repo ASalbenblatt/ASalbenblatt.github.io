@@ -1,14 +1,14 @@
 //Constants
 const wander = 0.5
-const attraction = 5
-const deltaVolume = 5
+const attraction = 3
+const deltaVolume = 2
 const enemyList = []
-const thingRadius = 20
+const thingRadius = 40
 const colideMult = 0.3;
 const enemySpeed = 1;
-const gameWidth = 500
-const gameHeight = 500
-const enemyStartGap = 50
+const gameWidth = 4000
+const gameHeight = 4000
+const enemyStartGap = 200
 let lastFrame = 0
 
 const wallColor = [50, 50, 50]
@@ -17,6 +17,16 @@ const testColor = [0, 255, 0]
 
 let position = [gameWidth/2, gameHeight/2]
 let velocity = [0,0]
+let angle = -Math.PI/2
+let angleVel = 0
+const angleDecay = 0.05
+let boosting = false
+let turningRight = false
+let turningLeft = false
+
+const playerSpeed = 0.4
+const turningSpeed = 0.002
+const playerDrag = 0.01
 
 
 
@@ -32,6 +42,10 @@ window.addEventListener("DOMContentLoaded", function() {
         enemyList.push(new enemies(getRandom(0, gameWidth), getRandom(position[1]+(enemyStartGap+thingRadius), gameHeight), volume))
       }
     }
+
+    window.addEventListener("keydown", keyDownHandler)
+    window.addEventListener("keyup", keyUpHandler)
+
     lastFrame = Date.now()
     window.requestAnimationFrame(loop)
 })
@@ -39,12 +53,15 @@ window.addEventListener("DOMContentLoaded", function() {
 function loop () {
   const canvas = document.querySelector("canvas");
   const ctx = canvas.getContext("2d");
+  const image = document.querySelector("#minePhoto")
 
   canvas.width = window.screen.availWidth
   canvas.height = window.screen.availHeight
 
   const frameDelta = (Date.now() - lastFrame)*60/1000
   lastFrame = Date.now()
+
+  // console.log(frameDelta)
 
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.translate(-1*(position[0]-(canvas.width/2)), -1*(position[1]-(canvas.height/2)))
@@ -63,8 +80,11 @@ function loop () {
   }
   for (enemy of enemyList) {
     enemy.move(frameDelta);
-    enemy.create(ctx);
+    ctx.fillStyle = "black"
+    enemy.create(ctx, image);
   }
+
+  updatePlayer(frameDelta, ctx, canvas)
 
   window.requestAnimationFrame(loop)
 }
@@ -85,7 +105,7 @@ class enemies {
 
     this.vel = vecAdd(
       vecScale(frameDelta * wander * Math.sqrt(dis / 255), wanderVec),
-      vecScale(frameDelta * attraction * this.volume / dis ** 1.3, vecPoint(this.coord, position))
+      vecScale(frameDelta * attraction / (dis ** 0.1), vecPoint(this.coord, position))
     );
   }
 
@@ -118,10 +138,85 @@ class enemies {
     ];
   }
 
-  create(ctx) {
-    //TODO
+  create(ctx, image) {
+    ctx.drawImage(image, this.coord[0]-(image.width/2), this.coord[1]-(image.width/2))
+    ctx.font = "22px sans-serif"
+    ctx.textBaseline = "middle"
+    ctx.textAlign = "center"
+    ctx.fillText(this.volume, this.coord[0], this.coord[1])
   }
 }
+
+function updatePlayer (frameDelta, ctx, canvas) {
+  if (boosting) {
+    velocity = vecAdd(velocity, vecScale(frameDelta*playerSpeed, [Math.cos(angle), Math.sin(angle)]))
+  }
+  if (turningLeft) {
+    angleVel -= turningSpeed
+  }
+  if (turningRight) {
+    angleVel += turningSpeed
+  }
+
+  angleVel *= 1 - angleDecay
+  angle += angleVel
+  velocity = vecScale(1-(frameDelta*playerDrag), velocity)
+  position = vecAdd(position, vecScale(frameDelta, velocity))
+
+  angle = angle % (2*Math.PI)
+  if (position[0] < thingRadius) {
+    // angle = Math.PI - angle;
+    velocity[0] *= -1
+  } else if(position[0] > gameWidth - thingRadius) {
+    // angle = Math.PI - angle;
+    velocity[0] *= -1
+  } else if (position[1] < thingRadius) {
+    // angle *= -1;
+    velocity[1] *= -1
+  } else if (position[1] > gameHeight - thingRadius) {
+    // angle *= -1;
+    velocity[1] *= -1
+  }
+
+  position = [
+    constrain(position[0], thingRadius, gameWidth - thingRadius),
+    constrain(position[1], thingRadius, gameHeight - thingRadius),
+  ];
+
+  let image
+  if (boosting) {
+    image = document.querySelector("#boostingShip")
+  } else {
+    image = document.querySelector("#stillShip")
+  }
+
+  
+  ctx.save()
+  ctx.translate(position[0], position[1])
+  ctx.rotate((Math.PI/2)+angle)
+  ctx.drawImage(image, -1*thingRadius, -1*thingRadius)
+  ctx.restore()
+}
+
+function keyUpHandler (event) {
+  if (event.key == " ") {
+    boosting = false
+  } else if (event.key == "A" || event.key == "a" || event.key == "ArrowLeft") {
+    turningLeft = false
+  } else if (event.key == "D" || event.key == "d" || event.key == "ArrowRight") {
+    turningRight = false
+  }
+}
+function keyDownHandler (event) {
+  if (event.key == " ") {
+    boosting = true
+  } else if (event.key == "A" || event.key == "a" || event.key == "ArrowLeft") {
+    turningLeft = true
+  } else if (event.key == "D" || event.key == "d" || event.key == "ArrowRight") {
+    turningRight = true
+  }
+}
+
 
 /** Get a random number in the range [min, max) */
 function getRandom(min, max) {
