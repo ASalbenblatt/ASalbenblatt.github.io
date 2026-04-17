@@ -24,7 +24,7 @@ let boosting = false
 let turningRight = false
 let turningLeft = false
 
-const playerSpeed = 0.4
+const playerSpeed = 0.3
 const turningSpeed = 0.002
 const playerDrag = 0.01
 
@@ -140,7 +140,7 @@ class enemies {
 
   create(ctx, image) {
     ctx.drawImage(image, this.coord[0]-(image.width/2), this.coord[1]-(image.width/2))
-    ctx.font = "22px sans-serif"
+    ctx.font = "22px Helvetica, sans-serif"
     ctx.textBaseline = "middle"
     ctx.textAlign = "center"
     ctx.fillText(this.volume, this.coord[0], this.coord[1])
