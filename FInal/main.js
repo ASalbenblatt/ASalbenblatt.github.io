@@ -30,6 +30,11 @@ const playerDrag = 0.01
 
 let finalVolume = 0
 
+const starRadii = [4, 8]
+const starColor = "rgb(245, 235, 235)"
+const starList = []
+const numStars = 600
+
 
 
 window.addEventListener("DOMContentLoaded", function() {
@@ -40,6 +45,14 @@ window.addEventListener("DOMContentLoaded", function() {
   ctx.translate(-1*(position[0]-(canvas.width/2)), -1*(position[1]-(canvas.height/2)))
   ctx.fillStyle = `rgb(${backgroundColor[0]} ${backgroundColor[1]} ${backgroundColor[2]})`;
   ctx.fillRect(-10, -10, gameWidth+20, gameHeight+20);
+
+  for (let i = 0 ; i<numStars ; i++) {
+    starList.push(new star())
+  }
+  for (star of starList) {
+    ctx.fillStyle = starColor
+    star.draw(ctx)
+  }
 
   window.addEventListener("keydown", keyDownHandler)
   window.addEventListener("keyup", keyUpHandler)
@@ -75,6 +88,10 @@ function loop () {
   ctx.fillRect(-1 * canvas.width, gameHeight, gameWidth + canvas.width*2, canvas.height);
   // ctx.fillStyle = `green`;
   // ctx.fillRect(position[0]-(enemyStartGap+thingRadius), position[1]-(enemyStartGap+thingRadius), (enemyStartGap+thingRadius)*2, (enemyStartGap+thingRadius)*2);
+  for (star of starList) {
+    ctx.fillStyle = starColor
+    star.draw(ctx)
+  }
 
   for (enemy of enemyList) {
     enemy.desire(frameDelta);
@@ -154,6 +171,21 @@ class enemies {
     ctx.textBaseline = "middle"
     ctx.textAlign = "center"
     ctx.fillText(this.volume, this.coord[0], this.coord[1])
+  }
+}
+
+class star {
+  constructor () {
+    this.radius = getRandom(...starRadii)
+    this.position = [getRandom(0, gameWidth), getRandom(0, gameHeight)]
+  }
+  draw (ctx) {
+    ctx.beginPath()
+    ctx.arc(this.position[0] + this.radius, this.position[1] + this.radius, this.radius, Math.PI, 3*Math.PI/2)
+    ctx.arc(this.position[0] + this.radius, this.position[1] - this.radius, this.radius, Math.PI/2, Math.PI)
+    ctx.arc(this.position[0] - this.radius, this.position[1] - this.radius, this.radius, 0, Math.PI/2)
+    ctx.arc(this.position[0] - this.radius, this.position[1] + this.radius, this.radius, 3*Math.PI/2, 0)
+    ctx.fill()
   }
 }
 
