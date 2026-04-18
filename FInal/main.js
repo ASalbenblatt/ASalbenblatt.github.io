@@ -2,13 +2,13 @@
 const wander = 0.5
 const attraction = 3
 const deltaVolume = 2
-const enemyList = []
+let enemyList = []
 const thingRadius = 40
 const colideMult = 0.3;
 const enemySpeed = 1;
 const gameWidth = 4000
 const gameHeight = 4000
-const enemyStartGap = 200
+const enemyStartGap = 300
 let lastFrame = 0
 
 const wallColor = [50, 50, 50]
@@ -28,26 +28,26 @@ const playerSpeed = 0.3
 const turningSpeed = 0.002
 const playerDrag = 0.01
 
+let finalVolume = 0
+
 
 
 window.addEventListener("DOMContentLoaded", function() {
-    for (let volume = 0 ; volume <= 100 ; volume += deltaVolume) {
-      if (volume % (deltaVolume*4) == 0) {
-        enemyList.push(new enemies(getRandom(0, position[0]-(enemyStartGap+thingRadius)), getRandom(0, gameHeight), volume))
-      } else if (volume % (deltaVolume*4) == 1*deltaVolume) {
-        enemyList.push(new enemies(getRandom(position[0]+(enemyStartGap+thingRadius), gameWidth), getRandom(0, gameHeight), volume))
-      } else if (volume % (deltaVolume*4) == 2*deltaVolume) {
-        enemyList.push(new enemies(getRandom(0, gameWidth), getRandom(0, position[1]-(enemyStartGap+thingRadius)), volume))
-      } else {
-        enemyList.push(new enemies(getRandom(0, gameWidth), getRandom(position[1]+(enemyStartGap+thingRadius), gameHeight), volume))
-      }
-    }
+  const canvas = document.querySelector("canvas");
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.screen.availWidth
+  canvas.height = window.screen.availHeight
+  ctx.translate(-1*(position[0]-(canvas.width/2)), -1*(position[1]-(canvas.height/2)))
+  ctx.fillStyle = `rgb(${backgroundColor[0]} ${backgroundColor[1]} ${backgroundColor[2]})`;
+  ctx.fillRect(-10, -10, gameWidth+20, gameHeight+20);
 
-    window.addEventListener("keydown", keyDownHandler)
-    window.addEventListener("keyup", keyUpHandler)
+  window.addEventListener("keydown", keyDownHandler)
+  window.addEventListener("keyup", keyUpHandler)
+  document.querySelector("#start").addEventListener("click", restart)
+  document.querySelector("#endRestart").addEventListener("click", restart)
+  document.querySelector("#volumeSetRestart").addEventListener("click", restart)
+  document.querySelector("#setVolume").addEventListener("click", setVolume)
 
-    lastFrame = Date.now()
-    window.requestAnimationFrame(loop)
 })
 
 function loop () {
@@ -73,6 +73,8 @@ function loop () {
   ctx.fillRect(-1 * canvas.width, -1 * canvas.height, canvas.width, gameHeight + canvas.height*2);
   ctx.fillRect(gameWidth, -1 * canvas.height, canvas.width, gameHeight + canvas.height*2);
   ctx.fillRect(-1 * canvas.width, gameHeight, gameWidth + canvas.width*2, canvas.height);
+  // ctx.fillStyle = `green`;
+  // ctx.fillRect(position[0]-(enemyStartGap+thingRadius), position[1]-(enemyStartGap+thingRadius), (enemyStartGap+thingRadius)*2, (enemyStartGap+thingRadius)*2);
 
   for (enemy of enemyList) {
     enemy.desire(frameDelta);
@@ -85,6 +87,14 @@ function loop () {
   }
 
   updatePlayer(frameDelta, ctx, canvas)
+
+  for (mine of enemyList) {
+    if (vecDist(position, mine.coord) < 2*thingRadius) {
+      finalVolume = mine.volume
+      gameOver()
+      return
+    }
+  }
 
   window.requestAnimationFrame(loop)
 }
@@ -140,7 +150,7 @@ class enemies {
 
   create(ctx, image) {
     ctx.drawImage(image, this.coord[0]-(image.width/2), this.coord[1]-(image.width/2))
-    ctx.font = "22px Helvetica, sans-serif"
+    ctx.font = "22px 'Helvetica Neue', Helvetica, Arial, sans-serif"
     ctx.textBaseline = "middle"
     ctx.textAlign = "center"
     ctx.fillText(this.volume, this.coord[0], this.coord[1])
@@ -196,6 +206,45 @@ function updatePlayer (frameDelta, ctx, canvas) {
   ctx.rotate((Math.PI/2)+angle)
   ctx.drawImage(image, -1*thingRadius, -1*thingRadius)
   ctx.restore()
+}
+
+function restart () {
+  document.querySelector("#endScreen").classList.add("hidden")
+  document.querySelector("#startScreen").classList.add("hidden")
+  document.querySelector("#volumeSetScreen").classList.add("hidden")
+
+  enemyList = []
+
+  position = [gameWidth/2, gameHeight/2]
+  velocity = [0,0]
+  angle = -Math.PI/2
+  angleVel = 0
+
+  for (let volume = 0 ; volume <= 100 ; volume += deltaVolume) {
+    if (volume % (deltaVolume*4) == 0) {
+      enemyList.push(new enemies(getRandom(0, position[0]-(enemyStartGap+thingRadius)), getRandom(0, gameHeight), volume))
+    } else if (volume % (deltaVolume*4) == 1*deltaVolume) {
+      enemyList.push(new enemies(getRandom(position[0]+(enemyStartGap+thingRadius), gameWidth), getRandom(0, gameHeight), volume))
+    } else if (volume % (deltaVolume*4) == 2*deltaVolume) {
+      enemyList.push(new enemies(getRandom(0, gameWidth), getRandom(0, position[1]-(enemyStartGap+thingRadius)), volume))
+    } else {
+      enemyList.push(new enemies(getRandom(0, gameWidth), getRandom(position[1]+(enemyStartGap+thingRadius), gameHeight), volume))
+    }
+  }
+
+  lastFrame = Date.now()
+  window.requestAnimationFrame(loop)
+}
+
+function gameOver () {
+  document.querySelector("#endText").textContent = `You got a volume of ${finalVolume}! Do you want to:`
+  document.querySelector("#endScreen").classList.remove("hidden")
+}
+
+function setVolume () {
+  document.querySelector("#volumeSetText").textContent = `Your volume has been set to ${finalVolume}`
+  document.querySelector("#volumeSetScreen").classList.remove("hidden")
+  document.querySelector("#endScreen").classList.add("hidden")
 }
 
 function keyUpHandler (event) {

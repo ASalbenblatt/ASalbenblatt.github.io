@@ -1,18 +1,36 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en-US">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
-    <title>Volume Wars</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="main.js"></script>
-  </head>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width" />
+        <title>Volume Wars</title>
+        <link rel="stylesheet" href="style.css" />
+        <script src="main.js"></script>
+    </head>
 
-  <body>
-    <canvas></canvas>
-    
-    <img src="Mine.png" id="minePhoto" class="hidden">
-    <img src="Ship-Yes-Thrust.png" id="boostingShip" class="hidden">
-    <img src="Ship-No-Thrust.png" id="stillShip" class="hidden">
-  </body>
+    <body>
+        <div id="startScreen" class="popup">
+              <p>To set your volume, just crash into the mine with the volume you want.
+              To control your spaceship use:</p>
+              <p>A/Left Arrow - Turn Right</p>
+              <p>D/Right Arrow - Turn Left</p>
+              <p>Space - Boost Forward</p>
+              <p>Fly safe out there!</p>
+            <div class="buttons"><button id="start">Begin</button></div>
+        </div>
+        <div id="endScreen" class="popup hidden">
+            <p id="endText"></p>
+            <div class="buttons"><button id="setVolume">Keep It</button><button id="endRestart">Try Again</button></div>
+        </div>
+        <div id="volumeSetScreen" class="popup hidden">
+            <p id="volumeSetText"></p>
+            <div class="buttons"><button id="volumeSetRestart">Restart</button></div>
+        </div>
+
+        <canvas></canvas>
+
+        <img src="Mine.png" id="minePhoto" class="hidden">
+        <img src="Ship-Yes-Thrust.png" id="boostingShip" class="hidden">
+        <img src="Ship-No-Thrust.png" id="stillShip" class="hidden">
+    </body>
 </html>
