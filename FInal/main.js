@@ -1,4 +1,4 @@
-//Constants
+//Constants 
 const wander = 0.5
 const attraction = 3
 const deltaVolume = 2
