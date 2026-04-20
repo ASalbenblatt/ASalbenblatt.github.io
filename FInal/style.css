@@ -5,6 +5,7 @@ html, body {
 html {
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   height: 100%;
+  background-color: rgb(0 0 10);
 }
 
 body {

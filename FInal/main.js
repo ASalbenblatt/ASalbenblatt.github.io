@@ -35,23 +35,12 @@ const starColor = "rgb(245, 235, 235)"
 const starList = []
 const numStars = 600
 
+let preGameFrames = true
 
 
 window.addEventListener("DOMContentLoaded", function() {
-  const canvas = document.querySelector("canvas");
-  const ctx = canvas.getContext("2d");
-  canvas.width = window.screen.availWidth
-  canvas.height = window.screen.availHeight
-  ctx.translate(-1*(position[0]-(canvas.width/2)), -1*(position[1]-(canvas.height/2)))
-  ctx.fillStyle = `rgb(${backgroundColor[0]} ${backgroundColor[1]} ${backgroundColor[2]})`;
-  ctx.fillRect(-10, -10, gameWidth+20, gameHeight+20);
-
   for (let i = 0 ; i<numStars ; i++) {
     starList.push(new star())
-  }
-  for (star of starList) {
-    ctx.fillStyle = starColor
-    star.draw(ctx)
   }
 
   window.addEventListener("keydown", keyDownHandler)
@@ -61,37 +50,28 @@ window.addEventListener("DOMContentLoaded", function() {
   document.querySelector("#volumeSetRestart").addEventListener("click", restart)
   document.querySelector("#setVolume").addEventListener("click", setVolume)
 
+  window.requestAnimationFrame(preGameLoop)
+
 })
+
+function preGameLoop () {
+  displayBackground()
+  if (preGameFrames) {
+    window.requestAnimationFrame(preGameLoop)
+  }
+}
 
 function loop () {
   const canvas = document.querySelector("canvas");
   const ctx = canvas.getContext("2d");
   const image = document.querySelector("#minePhoto")
 
-  canvas.width = window.screen.availWidth
-  canvas.height = window.screen.availHeight
-
   const frameDelta = (Date.now() - lastFrame)*60/1000
   lastFrame = Date.now()
 
   // console.log(frameDelta)
 
-  ctx.setTransform(1, 0, 0, 1, 0, 0);
-  ctx.translate(-1*(position[0]-(canvas.width/2)), -1*(position[1]-(canvas.height/2)))
-
-  ctx.fillStyle = `rgb(${backgroundColor[0]} ${backgroundColor[1]} ${backgroundColor[2]})`;
-  ctx.fillRect(-10, -10, gameWidth+20, gameHeight+20);
-  ctx.fillStyle = `rgb(${wallColor[0]} ${wallColor[1]} ${wallColor[2]})`;
-  ctx.fillRect(-1 * canvas.width, -1 * canvas.height, gameWidth + canvas.width*2, canvas.height);
-  ctx.fillRect(-1 * canvas.width, -1 * canvas.height, canvas.width, gameHeight + canvas.height*2);
-  ctx.fillRect(gameWidth, -1 * canvas.height, canvas.width, gameHeight + canvas.height*2);
-  ctx.fillRect(-1 * canvas.width, gameHeight, gameWidth + canvas.width*2, canvas.height);
-  // ctx.fillStyle = `green`;
-  // ctx.fillRect(position[0]-(enemyStartGap+thingRadius), position[1]-(enemyStartGap+thingRadius), (enemyStartGap+thingRadius)*2, (enemyStartGap+thingRadius)*2);
-  for (star of starList) {
-    ctx.fillStyle = starColor
-    star.draw(ctx)
-  }
+  displayBackground()
 
   for (enemy of enemyList) {
     enemy.desire(frameDelta);
@@ -245,6 +225,8 @@ function restart () {
   document.querySelector("#startScreen").classList.add("hidden")
   document.querySelector("#volumeSetScreen").classList.add("hidden")
 
+  preGameFrames = false
+
   enemyList = []
 
   position = [gameWidth/2, gameHeight/2]
@@ -295,6 +277,31 @@ function keyDownHandler (event) {
     turningLeft = true
   } else if (event.key == "D" || event.key == "d" || event.key == "ArrowRight") {
     turningRight = true
+  }
+}
+
+function displayBackground () {
+  const canvas = document.querySelector("canvas");
+  const ctx = canvas.getContext("2d");
+
+  canvas.width = window.screen.availWidth
+  canvas.height = window.screen.availHeight
+
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.translate(-1*(position[0]-(canvas.width/2)), -1*(position[1]-(canvas.height/2)))
+
+  ctx.fillStyle = `rgb(${backgroundColor[0]} ${backgroundColor[1]} ${backgroundColor[2]})`;
+  ctx.fillRect(-10, -10, gameWidth+20, gameHeight+20);
+  ctx.fillStyle = `rgb(${wallColor[0]} ${wallColor[1]} ${wallColor[2]})`;
+  ctx.fillRect(-1 * canvas.width, -1 * canvas.height, gameWidth + canvas.width*2, canvas.height);
+  ctx.fillRect(-1 * canvas.width, -1 * canvas.height, canvas.width, gameHeight + canvas.height*2);
+  ctx.fillRect(gameWidth, -1 * canvas.height, canvas.width, gameHeight + canvas.height*2);
+  ctx.fillRect(-1 * canvas.width, gameHeight, gameWidth + canvas.width*2, canvas.height);
+  // ctx.fillStyle = `green`;
+  // ctx.fillRect(position[0]-(enemyStartGap+thingRadius), position[1]-(enemyStartGap+thingRadius), (enemyStartGap+thingRadius)*2, (enemyStartGap+thingRadius)*2);
+  for (star of starList) {
+    ctx.fillStyle = starColor
+    star.draw(ctx)
   }
 }
 
