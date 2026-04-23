@@ -1,13 +1,13 @@
 //Constants 
 const wander = 0.5
 const attraction = 3
-const deltaVolume = 2
+const deltaVolume = 1
 let enemyList = []
 const thingRadius = 40
 const colideMult = 0.3;
 const enemySpeed = 1;
-const gameWidth = 4000
-const gameHeight = 4000
+const gameWidth = 7000
+const gameHeight = 7000
 const enemyStartGap = 300
 let lastFrame = 0
 
@@ -29,6 +29,7 @@ const turningSpeed = 0.002
 const playerDrag = 0.01
 
 let finalVolume = 0
+let currentVolume = 50
 
 const starRadii = [4, 8]
 const starColor = "rgb(245, 235, 235)"
@@ -88,7 +89,7 @@ function loop () {
   for (mine of enemyList) {
     if (vecDist(position, mine.coord) < 2*thingRadius) {
       finalVolume = mine.volume
-      gameOver()
+      setVolume()
       return
     }
   }
@@ -246,6 +247,9 @@ function restart () {
     }
   }
 
+  document.querySelector("audio").volume = ((10**(currentVolume/100))-1)/9
+  document.querySelector("audio").play()
+
   lastFrame = Date.now()
   window.requestAnimationFrame(loop)
 }
@@ -259,6 +263,8 @@ function setVolume () {
   document.querySelector("#volumeSetText").textContent = `Your volume has been set to ${finalVolume}`
   document.querySelector("#volumeSetScreen").classList.remove("hidden")
   document.querySelector("#endScreen").classList.add("hidden")
+  currentVolume = finalVolume
+  document.querySelector("audio").volume = ((10**(currentVolume/100))-1)/9
 }
 
 function keyUpHandler (event) {
